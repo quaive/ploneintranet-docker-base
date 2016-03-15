@@ -45,7 +45,7 @@ Register the runner::
   Please enter the executor: shell, docker, docker-ssh, ssh?
   docker
   Please enter the Docker image (eg. ruby:2.1):
-  quaive/ploneintranet:latest
+  quaive/ploneintranet-base:latest
   INFO[0037] Runner registered successfully.
 
 
