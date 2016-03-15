@@ -47,6 +47,6 @@ RUN mkdir /tmp/build && cd /tmp/build && \
     virtualenv -p python2.7 . && \
     bin/pip install -r requirements.txt && \
     bin/buildout -c buildout.cfg && \
-    chmod o+w /var/tmp/eggs /var/tmp/downloads /var/tmp/extends && \
+    chmod -R a+rwX /var/tmp/eggs /var/tmp/downloads /var/tmp/extends && \
     cd /tmp && rm -rf /tmp/build
 CMD ["/bin/bash"]

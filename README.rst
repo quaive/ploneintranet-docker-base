@@ -57,3 +57,15 @@ You can find the gitlab-ci token "xxx" in your gitlab.com project under
 
 For more info, see the docs at:
 https://gitlab.com/gitlab-org/gitlab-ci-multi-runner/blob/master/docs/install/docker.md
+
+Caveat Emptor
+-------------
+
+To enable cache re-use from arbitrary user ids under which you may want to run your
+buildout, the buildout caches are configured to be read/write for any user within the
+docker host::
+
+  chmod -R a+rwX /var/tmp/eggs /var/tmp/downloads /var/tmp/extends
+
+Depending on your threat model and level of paranoia you may wish to lock that down
+for your specific install.
