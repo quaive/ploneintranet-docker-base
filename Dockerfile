@@ -1,6 +1,7 @@
 FROM ubuntu:14.04.2
 MAINTAINER guido.stevens@cosent.net
 RUN apt-get update && apt-get install -y \
+    curl \
     firefox \
     gcc \
     gettext \
