@@ -1,5 +1,7 @@
 FROM ubuntu:14.04.2
 MAINTAINER guido.stevens@cosent.net
+# we need ruby>2.0.0 for jekyll>3.0.0
+RUN apt-get update && apt-get install -y software-properties-common && apt-add-repository -y ppa:brightbox/ruby-ng
 RUN apt-get update && apt-get install -y \
     curl \
     firefox \
@@ -26,8 +28,8 @@ RUN apt-get update && apt-get install -y \
     python-tk \
     python-virtualenv \
     redis-server \
-    ruby \
-    ruby-dev \
+    ruby2.3 \
+    ruby2.3-dev \
     wget \
     xvfb \
     zlib1g-dev
