@@ -15,9 +15,10 @@ endif
 docker-build: version
 ifeq ($(MARKER),$(OLDTAG))
 	docker build -t $(PROJECT):$(NEWTAG) .
+	docker tag $(PROJECT):$(NEWTAG) $(PROJECT):latest
 	echo ${NEWTAG} > LATEST
 	@echo " "
-	@echo "Now commit LATEST so the new tag is git tracked, and push the new image."
+	@echo "Now commit LATEST so the new tag is git tracked, and run `make docker-push`."
 else
 	@echo "Aborting docker build. Maybe you need to do a docker pull first?"
 endif
