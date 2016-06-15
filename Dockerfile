@@ -3,7 +3,9 @@ MAINTAINER guido.stevens@cosent.net
 # we need ruby>2.0.0 for jekyll>3.0.0
 RUN apt-get update && apt-get install -y software-properties-common && apt-add-repository -y ppa:brightbox/ruby-ng
 RUN apt-get update && apt-get install -y \
+    cron \
     curl \
+    file \
     firefox \
     gcc \
     gettext \
