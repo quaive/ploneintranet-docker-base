@@ -1,4 +1,4 @@
-FROM ubuntu:14.04.2
+FROM ubuntu:14.04.3
 MAINTAINER guido.stevens@cosent.net
 # we need ruby>2.0.0 for jekyll>3.0.0
 RUN apt-get update && apt-get install -y software-properties-common && apt-add-repository -y ppa:brightbox/ruby-ng
@@ -35,6 +35,11 @@ RUN apt-get update && apt-get install -y \
     wget \
     xvfb \
     zlib1g-dev
+# downgrade firefox because https://github.com/SeleniumHQ/selenium/issues/2110
+RUN cd /tmp && \
+    wget https://launchpad.net/~ubuntu-mozilla-security/+archive/ubuntu/ppa/+build/9629832/+files/firefox_46.0+build5-0ubuntu0.14.04.2_amd64.deb && \
+    apt-get -y purge firefox && \
+    dpkg -i firefox_46.0+build5-0ubuntu0.14.04.2_amd64.deb    
 RUN gem install docsplit
 RUN locale-gen en_US.UTF-8 nl_NL@euro
 COPY buildout.d /tmp/buildout.d
