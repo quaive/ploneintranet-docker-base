@@ -35,6 +35,7 @@ RUN apt-get update && apt-get install -y \
     ruby2.3 \
     ruby2.3-dev \
     wget \
+    wv \
     xvfb \
     zlib1g-dev
 # downgrade firefox because https://github.com/SeleniumHQ/selenium/issues/2110
