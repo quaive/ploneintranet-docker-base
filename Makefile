@@ -1,5 +1,5 @@
 PROJECT=quaive/ploneintranet-base
-BASETAG=gaia
+BASETAG=mars
 MARKER=$(shell cat LATEST)
 OLDTAG=$(shell docker images quaive/ploneintranet-base | grep $(BASETAG) | grep -v latest | awk '{print $$2}' | sort -nr | head -1)
 NEWTAG=$(shell echo ${OLDTAG} | sed -r 's/(.+\.)([0-9]+)/OLDTAG="\2"; OLDTAG=$$(( OLDTAG+1 )); echo "\1$$OLDTAG"/ge')

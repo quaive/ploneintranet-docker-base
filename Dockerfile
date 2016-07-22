@@ -20,6 +20,7 @@ RUN apt-get update && apt-get install -y \
     libldap2-dev \
     libreoffice \
     libsasl2-dev \
+    libsqlite3-dev \
     libxslt1-dev \
     make \
     pdftk \
