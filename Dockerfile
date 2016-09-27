@@ -50,9 +50,9 @@ COPY buildout.d /tmp/buildout.d
 COPY buildout.cfg /tmp/
 COPY requirements.txt /tmp/
 RUN cd /tmp && \
-    wget https://launchpad.net/plone/5.0/5.0.4/+download/Plone-5.0.4-UnifiedInstaller.tgz && \
-    tar xzf Plone-5.0.4-UnifiedInstaller.tgz && \
-    tar xjf Plone-5.0.4-UnifiedInstaller/packages/buildout-cache.tar.bz2 && \
+    wget https://launchpad.net/plone/5.0/5.0.6/+download/Plone-5.0.6-UnifiedInstaller.tgz && \
+    tar xzf Plone-5.0.6-UnifiedInstaller.tgz && \
+    tar xjf Plone-5.0.6-UnifiedInstaller/packages/buildout-cache.tar.bz2 && \
     mv buildout-cache/* /var/tmp/ && \
     mkdir /var/tmp/extends && \
     rm -rf Plone* buildout-cache
