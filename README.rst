@@ -69,3 +69,25 @@ docker host::
 
 Depending on your threat model and level of paranoia you may wish to lock that down
 for your specific install.
+
+Development notes
+-----------------
+
+To upgrade the Plone version:
+
+- cp ../ploneintranet/buildout.d/* buildout.d/
+- git clean -f
+- sed -i -e 's/Plone-5.0.4/Plone-5.0.6/g' Dockerfile
+- docker pull quaive/ploneintranet-base
+- make docker-build
+- git commit -am 'mars.2: upgrade to Plone 5.0.6'
+- make docker-push
+- git push
+
+Update the docker cache:
+
+- docker pull quaive/ploneintranet-base:latest
+- ssh ext3.syslab.com docker pull quaive/ploneintranet-base:latest
+
+Normally not needed: upgrading the runners themselves:
+https://gitlab.com/gitlab-org/gitlab-ci-multi-runner/blob/master/docs/install/docker.md#update
