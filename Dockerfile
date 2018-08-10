@@ -34,6 +34,7 @@ RUN apt-get update && apt-get install -y \
     redis-server \
     ruby2.3 \
     ruby2.3-dev \
+    sudo \
     wget \
     wv \
     xvfb \
