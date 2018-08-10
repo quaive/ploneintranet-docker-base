@@ -18,7 +18,7 @@ ifeq ($(MARKER),$(OLDTAG))
 	docker tag $(PROJECT):$(NEWTAG) $(PROJECT):latest
 	echo ${NEWTAG} > LATEST
 	@echo " "
-	@echo "Now commit LATEST so the new tag is git tracked, and run `make docker-push`."
+	@echo "Now commit LATEST so the new tag is git tracked, and run 'make docker-push'."
 else
 	@echo "Aborting docker build. Maybe you need to do a docker pull first?"
 endif
