@@ -39,11 +39,10 @@ RUN apt-get update && apt-get install -y \
     wv \
     xvfb \
     zlib1g-dev
-# downgrade firefox because https://github.com/SeleniumHQ/selenium/issues/2110
 RUN cd /tmp && \
-    wget https://launchpad.net/~ubuntu-mozilla-security/+archive/ubuntu/ppa/+build/9629817/+files/firefox_46.0+build5-0ubuntu0.16.04.2_amd64.deb && \
-    apt-get -y purge firefox && \
-    dpkg -i firefox_46.0+build5-0ubuntu0.16.04.2_amd64.deb
+    wget https://github.com/mozilla/geckodriver/releases/download/v0.19.1/geckodriver-v0.19.1-linux64.tar.gz && \
+    tar xvzf geckodriver-v0.19.1-linux64.tar.gz && \
+    mv geckodriver /usr/local/bin
 RUN gem install docsplit
 RUN locale-gen en_US.UTF-8 nl_NL@euro
 COPY buildout.d /tmp/buildout.d
