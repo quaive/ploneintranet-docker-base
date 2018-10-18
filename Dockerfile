@@ -39,6 +39,8 @@ RUN apt-get update && apt-get install -y \
     wv \
     xvfb \
     zlib1g-dev
+RUN curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash && \
+    apt-get install -y git-lfs
 RUN cd /tmp && \
     wget https://github.com/mozilla/geckodriver/releases/download/v0.19.1/geckodriver-v0.19.1-linux64.tar.gz && \
     tar xvzf geckodriver-v0.19.1-linux64.tar.gz && \
