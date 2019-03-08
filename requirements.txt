@@ -1,4 +1,2 @@
 # NOTE: setuptools and zc.buildout versions must be in sync with:
-# ./buildout.d/versions.cfg
-setuptools==39.0.1
-zc.buildout==2.11.3
+-r https://dist.plone.org/release/5.1.5/requirements.txt

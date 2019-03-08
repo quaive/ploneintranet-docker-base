@@ -1,5 +1,5 @@
 PROJECT=quaive/ploneintranet-base
-BASETAG=jupiter
+BASETAG=saturn
 MARKER=$(shell cat LATEST)
 OLDTAG=$(shell docker images quaive/ploneintranet-base | grep $(BASETAG) | grep -v latest | awk '{print $$2}' | sort -nr | head -1)
 NEWTAG=$(shell echo ${OLDTAG} | sed -r 's/(.+\.)([0-9]+)/OLDTAG="\2"; NEWTAG=$$(( OLDTAG+1 )); echo "\1$$NEWTAG"/ge')
@@ -10,6 +10,7 @@ version:
 	@echo new tag......: ${NEWTAG}
 ifneq ($(MARKER),$(OLDTAG))
 	@echo "Error: LATEST marker does not match highest image tag."
+	@echo "If tags are missing, run 'make docker-pull && make docker-retag'"
 endif
 
 docker-build: version
@@ -29,3 +30,9 @@ docker-run:
 
 docker-push:
 	docker push $(PROJECT)
+
+docker-pull:
+	docker pull  $(PROJECT)
+
+docker-retag:
+	docker tag $(PROJECT):latest $(PROJECT):$(MARKER)
