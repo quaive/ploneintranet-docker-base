@@ -23,6 +23,7 @@ RUN apt-get update && apt-get install -y \
     locales \
     make \
     pdftk \
+    pdf2svg \
     poppler-data \
     poppler-utils \
     python-dev \
