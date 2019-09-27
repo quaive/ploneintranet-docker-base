@@ -1,11 +1,12 @@
-FROM ubuntu:16.04
+FROM ubuntu:18.04
 MAINTAINER guido.stevens@cosent.net
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y \
     cron \
     curl \
     file \
-    firefox \
     gcc \
+    gdebi \
     gettext \
     ghostscript \
     git-core \
@@ -22,7 +23,6 @@ RUN apt-get update && apt-get install -y \
     libxslt1-dev \
     locales \
     make \
-    pdftk \
     pdf2svg \
     poppler-data \
     poppler-utils \
@@ -33,19 +33,39 @@ RUN apt-get update && apt-get install -y \
     python-tk \
     python-virtualenv \
     redis-server \
-    ruby2.3 \
-    ruby2.3-dev \
+    ruby \
+    ruby-dev \
+    software-properties-common \
     sudo \
     wget \
     wv \
     xvfb \
     zlib1g-dev
+RUN add-apt-repository ppa:malteworld/ppa && \
+    apt-get update && \
+    apt-get install -y pdftk
 RUN curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash && \
     apt-get install -y git-lfs
 RUN cd /tmp && \
-    wget https://github.com/mozilla/geckodriver/releases/download/v0.19.1/geckodriver-v0.19.1-linux64.tar.gz && \
-    tar xvzf geckodriver-v0.19.1-linux64.tar.gz && \
-    mv geckodriver /usr/local/bin
+    wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
+    gdebi -n google-chrome-stable_current_amd64.deb && \
+    apt-get -fy install && \
+    rm google-chrome-stable_current_amd64.deb && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*  && \
+    mv /usr/bin/google-chrome /usr/bin/google-chrome-real && \
+    echo "/usr/bin/google-chome-real --no-sandbox --disable-gpu" > /usr/bin/google-chrome && \
+    chmod +x /usr/bin/google-chrome && \
+    wget -q  http://chromedriver.storage.googleapis.com/LATEST_RELEASE && \
+    echo $(cat LATEST_RELEASE) && \
+    chromedriver_version=$(cat LATEST_RELEASE) && \
+    wget -N http://chromedriver.storage.googleapis.com/$chromedriver_version/chromedriver_linux64.zip && \
+    unzip chromedriver_linux64.zip && \
+    chmod +x chromedriver && \
+    mv -f chromedriver /usr/local/bin/chromedriver && \
+    ln -s /usr/local/bin/chromedriver /usr/bin/chromedriver && \
+    chromedriver --version && \
+    google-chrome --version
 RUN gem install docsplit
 RUN locale-gen en_US.UTF-8 nl_NL@euro
 COPY buildout.d /tmp/buildout.d

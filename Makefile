@@ -11,6 +11,7 @@ version:
 ifneq ($(MARKER),$(OLDTAG))
 	@echo "Error: LATEST marker does not match highest image tag."
 	@echo "If tags are missing, run 'make docker-pull && make docker-retag'"
+	@echo "To remove a brownbag build, run 'make docker-untag'"
 endif
 
 docker-build: version
@@ -36,3 +37,7 @@ docker-pull:
 
 docker-retag:
 	docker tag $(PROJECT):latest $(PROJECT):$(MARKER)
+
+docker-untag:
+	docker rmi $(PROJECT):$(MARKER)
+	docker images quaive/ploneintranet-base | grep $(BASETAG) | grep -v latest | awk '{print $$2}' | sort -nr | head -1 > LATEST
