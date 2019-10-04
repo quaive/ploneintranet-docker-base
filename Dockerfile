@@ -46,26 +46,53 @@ RUN add-apt-repository ppa:malteworld/ppa && \
     apt-get install -y pdftk
 RUN curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash && \
     apt-get install -y git-lfs
-RUN cd /tmp && \
-    wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
-    gdebi -n google-chrome-stable_current_amd64.deb && \
-    apt-get -fy install && \
-    rm google-chrome-stable_current_amd64.deb && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*  && \
-    mv /usr/bin/google-chrome /usr/bin/google-chrome-real && \
-    echo "/usr/bin/google-chome-real --no-sandbox --disable-gpu" > /usr/bin/google-chrome && \
-    chmod +x /usr/bin/google-chrome && \
-    wget -q  http://chromedriver.storage.googleapis.com/LATEST_RELEASE && \
-    echo $(cat LATEST_RELEASE) && \
-    chromedriver_version=$(cat LATEST_RELEASE) && \
-    wget -N http://chromedriver.storage.googleapis.com/$chromedriver_version/chromedriver_linux64.zip && \
-    unzip chromedriver_linux64.zip && \
-    chmod +x chromedriver && \
-    mv -f chromedriver /usr/local/bin/chromedriver && \
-    ln -s /usr/local/bin/chromedriver /usr/bin/chromedriver && \
-    chromedriver --version && \
-    google-chrome --version
+
+#============================================
+# Google Chrome
+#============================================
+# can specify versions by CHROME_VERSION;
+#  e.g. google-chrome-stable=53.0.2785.101-1
+#       google-chrome-beta=53.0.2785.92-1
+#       google-chrome-unstable=54.0.2840.14-1
+#       latest (equivalent to google-chrome-stable)
+#       google-chrome-beta  (pull latest beta)
+#============================================
+ARG CHROME_VERSION="google-chrome-stable"
+RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
+  && echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list \
+  && apt-get update -qqy \
+  && apt-get -qqy install \
+    ${CHROME_VERSION:-google-chrome-stable} \
+  && rm /etc/apt/sources.list.d/google-chrome.list \
+  && rm -rf /var/lib/apt/lists/* /var/cache/apt/*
+
+#============================================
+# Chrome webdriver
+#============================================
+# can specify versions by CHROME_DRIVER_VERSION
+# Latest released version will be used by default
+#============================================
+ARG CHROME_DRIVER_VERSION
+RUN if [ -z "$CHROME_DRIVER_VERSION" ]; \
+  then CHROME_MAJOR_VERSION=$(google-chrome --version | sed -E "s/.* ([0-9]+)(\.[0-9]+){3}.*/\1/") \
+    && CHROME_DRIVER_VERSION=$(wget --no-verbose -O - "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_${CHROME_MAJOR_VERSION}"); \
+  fi \
+  && echo "Using chromedriver version: "$CHROME_DRIVER_VERSION \
+  && wget --no-verbose -O /tmp/chromedriver_linux64.zip https://chromedriver.storage.googleapis.com/$CHROME_DRIVER_VERSION/chromedriver_linux64.zip \
+  && rm -rf /opt/selenium/chromedriver \
+  && unzip /tmp/chromedriver_linux64.zip -d /opt/selenium \
+  && rm /tmp/chromedriver_linux64.zip \
+  && mv /opt/selenium/chromedriver /opt/selenium/chromedriver-$CHROME_DRIVER_VERSION \
+  && chmod 755 /opt/selenium/chromedriver-$CHROME_DRIVER_VERSION \
+  && sudo ln -fs /opt/selenium/chromedriver-$CHROME_DRIVER_VERSION /usr/bin/chromedriver
+
+#=================================
+# Chrome Launch Script Wrapper
+#=================================
+COPY wrap_chrome_binary /opt/bin/wrap_chrome_binary
+RUN /opt/bin/wrap_chrome_binary
+
+
 RUN gem install docsplit
 RUN locale-gen en_US.UTF-8 nl_NL@euro
 COPY buildout.d /tmp/buildout.d
