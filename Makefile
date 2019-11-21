@@ -3,6 +3,7 @@ BASETAG=saturn
 MARKER=$(shell cat LATEST)
 OLDTAG=$(shell docker images quaive/ploneintranet-base | grep $(BASETAG) | grep -v latest | awk '{print $$2}' | sort -nr | head -1)
 NEWTAG=$(shell echo ${OLDTAG} | sed -r 's/(.+\.)([0-9]+)/OLDTAG="\2"; NEWTAG=$$(( OLDTAG+1 )); echo "\1$$NEWTAG"/ge')
+DATE = $(shell date +%Y%m%d)
 
 version:
 	@echo LATEST marker: ${MARKER}
@@ -16,7 +17,7 @@ endif
 
 docker-build: version
 ifeq ($(MARKER),$(OLDTAG))
-	docker build -t $(PROJECT):$(NEWTAG) .
+	docker build -t $(PROJECT):$(NEWTAG) --build-arg CACHEBUST=$(DATE) .
 	docker tag $(PROJECT):$(NEWTAG) $(PROJECT):latest
 	echo ${NEWTAG} > LATEST
 	@echo " "
